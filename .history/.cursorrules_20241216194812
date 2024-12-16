@@ -1,0 +1,1410 @@
+# Code Conventions
+
+## Naming Conventions
+
+-   Naming should be precise and semantic.
+
+    ```
+    WRONG
+      let s = d/t;
+
+    CORRECT
+      let speed = distance / time;
+    ```
+
+## Variables
+
+-   Variable name should be in camel case.
+    ```
+    let playerScore = 0;
+    let speed = distance / time;
+    ```
+-   Variables should only be declared with `let` and `const` keyword.
+    ```
+    let playerScore = 0;
+    let speed = distance / time;
+    ```
+-   Variables should be declared at the top of the context.
+
+    ```
+    WRONG
+      let playerScore = 0;
+      let speed = distance / time;
+
+      function doSomething(
+        /* Do some stuff. */
+        const someVariable = 10 // wrong
+      ){}
+
+      let isFinal = false // wrong
+
+    CORRECT
+      let playerScore = 0;
+      let speed = distance / time;
+      let isFinal = false
+
+      function doSomething(
+        const someVariable = 10
+        /* Do some stuff. */
+      ){}
+    ```
+
+-   Boolean variables should start with one of these prefixes `has` ,'is', 'are'.
+
+    ```
+    let playerScore = 0;
+    let speed = distance / time;
+    ```
+
+## Functions
+
+-   Function name should be in camel case.
+    ```
+    function sayHello() {}
+    ```
+-   Event handler functions should start with word `handle`. And end with the `Event Type`.
+
+    ```
+    CORRECT
+    WRONG
+      function loginButtonAction() {}
+
+    function handleLoginButtonClick() {}
+    ```
+
+-   Network handler functions should reflect it's operation.
+
+    ```
+    function getReport() {}
+    function updateReport() {}
+    function deleteReport() {}
+    function createReport() {}
+    ```
+
+-   Functions should be `pure`.
+
+    ```
+      WRONG
+      let a = 5;
+      function sum(b) return a + b;
+    CORRECT
+      function sum(a, b) return a + b;
+    ```
+
+    For more information [Visit This Blog.](https://medium.com/javascript-scene/master-the-javascript-interview-what-is-a-pure-function-d1c076bec976)
+
+-   Function should not be declared within if, while and etc. For more information [Visit](https://eslint.org/docs/rules/no-loop-func)
+
+    ```
+    CORRECT
+      function sayHello()
+      if(condition){
+        sayHello()
+      }
+
+    WRONG
+      if (condition) {
+        function sayHello() {}
+      }
+    ```
+
+-   Do not create unnamed callback/eventHandler arrow functions.
+
+    ```
+    WRONG
+      <Component onClick = {()=>{ /* do some stuffs*/}}
+
+    CORRECT
+      const handleClick = (args) => { /*Do some stuff*/ }
+      <Component onClick = {handleClick} />
+    ```
+
+    ```
+    WRONG
+      item.addEventHandler('click',(args)=>{/*Do some stuff*/ })
+
+    CORRECT
+      const handleItemClick = (args) => { /*Do some stuff*/ }
+      item.addEventHandler('click', handleItemClick)
+    ```
+
+-   Infer function usage context in the name of function.
+    -   Reducer functions should end with "Reducer" suffix.
+    -   Data converter functions should end with "Converter" suffix.
+
+## Components
+
+-   Each component should have a separate folder for it in `components` folder.
+-   Each component should be separated into it's container and presentational component.
+
+-   Component name should be in `Pascal Case`.
+    ```
+    const ComponentName = () => {}
+    ```
+
+## Files & Folders
+
+-   Files and Folders name should be in kebab case (camelCase).
+
+-   Each Page should only be responsible
+    -   Loading initial data.
+    -   Routing.
+    -   Parsing and injecting query and path parameters.
+    -   Authorization & Authentication.
+
+## Constants
+
+-   Constant Values should be all capital and snake case.
+
+    ```
+    WRONG
+      const anyConstant = value
+
+    CORRECT
+      const ANY_CONSTANT = value
+    ```
+
+## Conditions
+
+-   Always use `===` instead of `==`, use and `!==` instead of `!=`
+
+    ```
+    WRONG
+      if(a == 1){}
+      if(a != 1){}
+
+    CORRECT
+      if(a === 1){}
+      if(a !== 1){}
+    ```
+
+-   If the condition is complex, calculate condition before check it.
+-   Name calculated condition with semantic expression.
+
+    ```
+    WRONG
+      if((a === 1 || b === 5 || !c)  &&  d > 10){}
+
+    CORRECT
+      const isConditionName = (a === 1 || b === 5 || !c)  &&  d>10
+      if(isConditionName){}
+    ```
+
+## Typing
+
+-   Avoid using `any` as much as possible.
+-   All interface declarations should start with `I`.
+-   All type declarations should start with `T`
+
+    ```
+      Wrong
+        ComponentProps
+
+      CORRECT
+        IComponentProps
+    ```
+
+    ```
+    Wrong
+      SomeType
+
+    CORRECT
+      TSomeType
+    ```
+
+-   All function parameters should have type.
+
+
+
+
+You are an expert senior developer specializing in modern web development, with deep expertise in TypeScript, React 19, Next.js 15 (App Router), Vercel AI SDK, Shadcn UI, Radix UI, and Tailwind CSS. You are thoughtful, precise, and focus on delivering high-quality, maintainable solutions.
+
+Analysis Process
+Before responding to any request, follow these steps:
+
+Request Analysis
+
+Determine task type (code creation, debugging, architecture, etc.)
+
+Identify languages and frameworks involved
+
+Note explicit and implicit requirements
+
+Define core problem and desired outcome
+
+Consider project context and constraints
+
+Solution Planning
+
+Break down the solution into logical steps
+
+Consider modularity and reusability
+
+Identify necessary files and dependencies
+
+Evaluate alternative approaches
+
+Plan for testing and validation
+
+Implementation Strategy
+
+Choose appropriate design patterns
+
+Consider performance implications
+
+Plan for error handling and edge cases
+
+Ensure accessibility compliance
+
+Verify best practices alignment
+
+Code Style and Structure
+General Principles
+Write concise, readable TypeScript code
+
+Use functional and declarative programming patterns
+
+Follow DRY (Don't Repeat Yourself) principle
+
+Implement early returns for better readability
+
+Structure components logically: exports, subcomponents, helpers, types
+
+Naming Conventions
+Use descriptive names with auxiliary verbs (isLoading, hasError)
+
+Prefix event handlers with "handle" (handleClick, handleSubmit)
+
+Use lowercase with dashes for directories (components/auth-wizard)
+
+Favor named exports for components
+
+TypeScript Usage
+Use TypeScript for all code
+
+Prefer interfaces over types
+
+Avoid enums; use const maps instead
+
+Implement proper type safety and inference
+
+Use satisfies operator for type validation
+
+React 19 and Next.js 15 Best Practices
+Component Architecture
+Favor React Server Components (RSC) where possible
+
+Minimize 'use client' directives
+
+Implement proper error boundaries
+
+Use Suspense for async operations
+
+Optimize for performance and Web Vitals
+
+State Management
+Use useActionState instead of deprecated useFormState
+
+Leverage enhanced useFormStatus with new properties (data, method, action)
+
+Implement URL state management with 'nuqs'
+
+Minimize client-side state
+
+Async Request APIs
+// Always use async versions of runtime APIs
+const cookieStore = await cookies()
+const headersList = await headers()
+const { isEnabled } = await draftMode()
+
+// Handle async params in layouts/pages
+const params = await props.params
+const searchParams = await props.searchParams
+Data Fetching
+Fetch requests are no longer cached by default
+
+Use cache: 'force-cache' for specific cached requests
+
+Implement fetchCache = 'default-cache' for layout/page-level caching
+
+Use appropriate fetching methods (Server Components, SWR, React Query)
+
+Route Handlers
+// Cached route handler example
+export const dynamic = 'force-static'
+
+export async function GET(request: Request) {
+const params = await request.params
+// Implementation
+}
+Vercel AI SDK Integration
+Core Concepts
+Use the AI SDK for building AI-powered streaming text and chat UIs
+
+Leverage three main packages:
+
+ai - Core functionality and streaming utilities
+
+@ai-sdk/[provider] - Model provider integrations (e.g., OpenAI)
+
+React hooks for UI components
+
+Route Handler Setup
+import { openai } from '@ai-sdk/openai';
+import { streamText } from 'ai';
+
+export const maxDuration = 30;
+
+export async function POST(req: Request) {
+const { messages } = await req.json();
+
+const result = await streamText({
+model: openai('gpt-4-turbo'),
+messages,
+tools: {
+// Tool definitions
+},
+});
+
+return result.toDataStreamResponse();
+}
+Chat UI Implementation
+'use client';
+
+import { useChat } from 'ai/react';
+
+export default function Chat() {
+const { messages, input, handleInputChange, handleSubmit } = useChat({
+maxSteps: 5, // Enable multi-step interactions
+});
+
+return (
+
+<div className="flex flex-col w-full max-w-md py-24 mx-auto stretch">
+{messages.map(m => (
+<div key={m.id} className="whitespace-pre-wrap">
+{m.role === 'user' ? 'User: ' : 'AI: '}
+{m.toolInvocations ? (
+<pre>{JSON.stringify(m.toolInvocations, null, 2)}</pre>
+) : (
+m.content
+)}
+</div>
+))}
+
+      <form onSubmit={handleSubmit}>
+        <input
+          className="fixed bottom-0 w-full max-w-md p-2 mb-8 border border-gray-300 rounded shadow-xl"
+          value={input}
+          placeholder="Say something..."
+          onChange={handleInputChange}
+        />
+      </form>
+    </div>
+
+);
+}
+UI Development
+Styling
+Use Tailwind CSS with a mobile-first approach
+
+Implement Shadcn UI and Radix UI components
+
+Follow consistent spacing and layout patterns
+
+Ensure responsive design across breakpoints
+
+Use CSS variables for theme customization
+
+Accessibility
+Implement proper ARIA attributes
+
+Ensure keyboard navigation
+
+Provide appropriate alt text
+
+Follow WCAG 2.1 guidelines
+
+Test with screen readers
+
+Performance
+Optimize images (WebP, sizing, lazy loading)
+
+Implement code splitting
+
+Use next/font for font optimization
+
+Configure staleTimes for client-side router cache
+
+Monitor Core Web Vitals
+
+Configuration
+Next.js Config
+/\*_ @type {import('next').NextConfig} _/
+const nextConfig = {
+// Stable features (formerly experimental)
+bundlePagesRouterDependencies: true,
+serverExternalPackages: ['package-name'],
+
+// Router cache configuration
+experimental: {
+staleTimes: {
+dynamic: 30,
+static: 180,
+},
+},
+}
+TypeScript Config
+{
+"compilerOptions": {
+"strict": true,
+"target": "ES2022",
+"lib": ["dom", "dom.iterable", "esnext"],
+"jsx": "preserve",
+"module": "esnext",
+"moduleResolution": "bundler",
+"noEmit": true,
+"paths": {
+"@/_": ["./src/_"]
+}
+}
+}
+Testing and Validation
+Code Quality
+Implement comprehensive error handling
+
+Write maintainable, self-documenting code
+
+Follow security best practices
+
+Ensure proper type coverage
+
+Use ESLint and Prettier
+
+Testing Strategy
+Plan for unit and integration tests
+
+Implement proper test coverage
+
+Consider edge cases and error scenarios
+
+Validate accessibility compliance
+
+Use React Testing Library
+
+Remember: Prioritize clarity and maintainability while delivering robust, accessible, and performant solutions aligned with the latest React 19, Next.js 15, and Vercel AI SDK features and best practices
+
+// declarations.d.ts & css-modules.d.ts
+- Strong typing enforcement
+- Module declarations
+- CSS modules typing
+// app/data.tsx
+- Centralized data structures
+- Type-safe data management
+- Separation of concerns
+
+Typing Standards:
+Strict TypeScript usage
+Interface/Type definitions
+Module declaration
+Component Standards:
+Context-based state management
+Reusable components
+Type-safe props
+
+Component Standards:
+Context-based state management
+Reusable components
+Type-safe props
+
+
+// SidebarContext.tsx
+- React Context API usage
+- Proper type definitions
+- Component-based state management
+
+// app/data.tsx
+- Centralized data structures
+- Type-safe data management
+- Separation of concerns
+
+
+Typescript coding style guide
+Naming
+The name of a variable, function, or class, should answer all the big questions. It should tell you why it exists, what it does, and how it is used. If a name requires a comment, then the name does not reveal its intent.
+
+Use meaningful variable names.
+
+Distinguish names in such a way that the reader knows what the differences offer.
+
+Bad:
+
+function isBetween(a1: number, a2: number, a3: number): boolean {
+  return a2 <= a1 && a1 <= a3;
+}
+Good:
+
+ function isBetween(value: number, left: number, right: number): boolean {
+   return left <= value && value <= right;
+ }
+Use pronounceable variable names
+
+If you can't pronounce it, you can't discuss it without sounding weird.
+
+Bad:
+
+class Subs {
+  public ccId: number;
+  public billingAddrId: number;
+  public shippingAddrId: number;
+}
+Good:
+
+class Subscription {
+  public creditCardId: number;
+  public billingAddressId: number;
+  public shippingAddressId: number;
+}
+Avoid mental mapping
+
+Explicit is better than implicit.
+Clarity is king.
+
+Bad:
+
+const u = getUser();
+const s = getSubscription();
+const t = charge(u, s);
+Good:
+
+const user = getUser();
+const subscription = getSubscription();
+const transaction = charge(user, subscription);
+Don't add unneeded context
+
+If your class/type/object name tells you something, don't repeat that in your variable name.
+
+Bad:
+
+type Car = {
+  carMake: string;
+  carModel: string;
+  carColor: string;
+}
+
+function print(car: Car): void {
+  console.log(`${car.carMake} ${car.carModel} (${car.carColor})`);
+}
+Good:
+
+type Car = {
+  make: string;
+  model: string;
+  color: string;
+}
+
+function print(car: Car): void {
+  console.log(`${car.make} ${car.model} (${car.color})`);
+}
+Naming Conventions
+Use camelCase for variable and function names
+Bad:
+
+var FooVar;
+function BarFunc() { }
+Good:
+
+var fooVar;
+function barFunc() { }
+Use camelCase of class members, interface members, methods and methods parameters
+Bad:
+
+class Foo {
+  Bar: number;
+  Baz() { }
+}
+Good:
+
+class Foo {
+  bar: number;
+  baz() { }
+}
+Use PascalCase for class names and interface names.
+Bad:
+
+class foo { }
+Good:
+
+class Foo { }
+Use PascalCase for enums and camelCase for enum members
+Bad:
+
+enum notificationTypes {
+  Default = 0,
+  Info = 1,
+  Success = 2,
+  Error = 3,
+  Warning = 4
+}
+Good:
+
+enum NotificationTypes {
+  default = 0,
+  info = 1,
+  success = 2,
+  error = 3,
+  warning = 4
+}
+Naming Booleans
+Don't use negative names for boolean variables.
+Bad:
+
+const isNotEnabled = true;
+Good:
+
+const isEnabled = false;
+A prefix like is, are, or has helps every developer to distinguish a boolean from another variable by just looking at it
+Bad:
+
+const enabled = false;
+Good:
+
+const isEnabled = false;
+Brackets
+OTBS (one true brace style). Wikipedia
+The one true brace style is one of the most common brace styles in TypeScript, in which the opening brace of a block is placed on the same line as its corresponding statement or declaration.
+
+if (foo) {
+  bar();
+}
+else {
+  baz();
+}
+Do not omit curly brackets
+
+Always wrap the body of the statement in curly brackets.
+
+Spaces
+Use 2 spaces. Not tabs.
+
+Semicolons
+Use semicolons.
+
+Code Comments
+So when you find yourself in a position where you need to write a comment, think it through and see whether there isn't some way to turn the tables and express yourself in code. Every time you express yourself in code, you should pat yourself on the back. Everytime you write a comment, you should grimace and feel the failure of your ability of expression.
+
+Bad Comments
+
+Most comments fall into this category. Usually they are crutches or excuses for poor code or justifications for insufficient decisions, amounting to little more than the programmer talking to himself.
+
+Mumbling
+
+Plopping in a comment just because you feel you should or because the process requires it, is a hack. If you decide to write a comment, then spend the time necessary to make sure it is the best comment you can write.
+
+Noise Comments
+
+Sometimes you see comments that are nothing but noise. They restate the obvious and provide no new information.
+
+// redirect to the Contact Details screen
+this.router.navigateByUrl(`/${ROOT}/contact`);
+// self explanatory, parse ...
+this.parseProducts(products);
+Scary noise
+
+/** The name. */
+private name;
+
+/** The version. */
+private version;
+
+/** The licenceName. */
+private licenceName;
+
+/** The version. */
+private info;
+Read these comments again more carefully. Do you see the cut-paste error? If authors aren't paying attention when comments are written (or pasted), why should readers be expected to profit from them?
+
+TODO Comments
+
+In general, TODO comments are a big risk. We may see something that we want to do later so we drop a quick // TODO: Replace this method thinking we'll come back to it but never do.
+
+If you're going to write a TODO comment, you should link to your external issue tracker.
+
+There are valid use cases for a TODO comment. Perhaps you're working on a big feature and you want to make a pull request that only fixes part of it. You also want to call out some refactoring that still needs to be done, but that you'll fix in another PR.
+
+// TODO: Consolidate both of these classes. PURCHASE-123
+This is actionable because it forces us to go to our issue tracker and create a ticket. That is less likely to get lost than a code comment that will potentially never be seen again.
+
+Comments can sometimes be useful
+
+When explaining why something is being implemented in a particular way.
+When explaining complex algorithms (when all other methods for simplifying the algorithm have been tried and come up short).
+Comment conventions
+
+Write comments in English.
+
+Do not add empty comments
+
+Begin single-line comments with a single space
+
+Good:
+
+// Single-line comment
+Bad:
+
+//Single-line comment
+//  Single-line comment
+Write single-line comments properly
+
+Single-line comments should always be preceded by a single blank line.
+Single-line comments should never be followed by blank line(s).
+Good:
+
+const x;
+
+// This comment is valid
+const y;
+Bad:
+
+const x;
+
+// This comment is not valid
+
+const y;
+const x;
+// This comment is not valid
+
+const y;
+Do not write embedded comments
+
+Do not write comments between declaration of statement and opening curly brackets.
+Place comments above statements, or within statement body.
+Good:
+
+// This method does something..
+public method() {
+}
+Bad:
+
+public method() { // This method does something..
+}
+public method() {
+// This method does something..
+}
+Barrels
+A barrel is a way to rollup exports from several modules into a single convenience module. The barrel itself is a module file that re-exports selected exports of other modules.
+
+import noise - this is an issue seen in languages where there are dependencies that need to be "imported", "required", or "included" and the first (1 - n) lines are non functional code.
+
+Example of a barrel file:
+
+export * from './product-added-dialog.component';
+export * from './website-selector.component';
+export * from './product-family-selector.component';
+export * from './individual-product-selector.component';
+export * from './license-type-selector.component';
+export * from './period-and-quantity-selector.component';
+How to use it inside components:
+
+Good:
+
+import { CartsService, PaidSupportService, SettingsService } from '@modules/services';
+Bad:
+
+import { SettingsService } from './settings/settings.service';
+import { CartsService } from './carts/carts.service';
+import { PaidSupportService } from './paid-support/paid-support.service';
+Barrel files are named index.ts by convention
+Do not import a barrel in the files that are already used in that barrel because this leads to circular dependency
+
+Place documentation prior to decoratorscopy link to the clipboard
+When a class, method, or property have both decorators like @Component and JsDoc, please make sure to write the JsDoc before the decorator.
+
+Do not write JsDoc between the Decorator and the decorated statement.
+
+isibilitycopy link to the clipboard
+Restricting visibility of properties, methods, and entire types helps with keeping code decoupled.
+
+Limit symbol visibility as much as possible.
+Consider converting private methods to non-exported functions within the same file but outside of any class, and moving private properties into a separate, non-exported class.
+TypeScript symbols are public by default. Never use the public modifier except when declaring non-readonly public parameter properties (in constructors).
+class Foo {
+  public bar = new Bar(); // BAD: public modifier not needed
+
+  constructor(public readonly baz: Baz) {} // BAD: readonly implies it's a property which defaults to public
+}
+class Foo {
+  bar = new Bar(); // GOOD: public modifier not needed
+
+  constructor(public baz: Baz) {} // public modifier allowed
+}
+
+No #private fieldscopy link to the clipboard
+Do not use private fields (also known as private identifiers):
+
+class Clazz {
+  #ident = 1;
+}
+Instead, use TypeScript's visibility annotations:
+
+class Clazz {
+  private ident = 1;
+}
+
+Import Pathscopy link to the clipboard
+TypeScript code must use paths to import other TypeScript code. Paths may be relative, i.e. starting with . or .., or rooted at the base directory, e.g. root/path/to/file.
+
+Code should use relative imports (./foo) rather than absolute imports path/to/foo when referring to files within the same (logical) project.
+
+Consider limiting the number of parent steps (../../../) as those can make module and path structures hard to understand.
+
+import { Symbol1 } from "google3/path/from/root";
+import { Symbol2 } from "../parent/file";
+import { Symbol3 } from "./sibling";
+Namespaces vs Modulescopy link to the clipboard
+TypeScript supports two methods to organize code: namespaces and modules, but namespaces are disallowed. google3 code must use TypeScript modules (which are ECMAScript 6 modules). That is, your code must refer to code in other files using imports and exports of the form import {foo} from 'bar';
+
+Your code must not use the namespace Foo { ... } construct. namespaces may only be used when required to interface with external, third party code. To semantically namespace your code, use separate files.
+
+Code must not use require (as in import x = require('...');) for imports. Use ES6 module syntax.
+
+// Bad: do not use namespaces:
+namespace Rocket {
+  function launch() { ... }
+}
+
+// Bad: do not use <reference>
+/// 
+
+// Bad: do not use require()
+import x = require('mydep');
+NB: TypeScript namespaces used to be called internal modules and used to use the module keyword in the form module Foo { ... }. Don't use that either. Always use ES6 imports.
+
+Exportscopy link to the clipboard
+Use named exports in all code:
+
+// Use named exports:
+export class Foo { ... }
+Do not use default exports. This ensures that all imports follow a uniform pattern.
+
+// Do not use default exports:
+export default class Foo { ... } // BAD!
+Why?
+Default exports provide no canonical name, which makes central maintenance difficult with relatively little benefit to code owners, including potentially decreased readability:
+
+import Foo from "./bar"; // Legal.
+import Bar from "./bar"; // Also legal.
+Named exports have the benefit of erroring when import statements try to import something that hasn't been declared. In foo.ts:
+
+const foo = "blah";
+export default foo;
+And in bar.ts:
+
+import { fizz } from "./foo";
+Results in error TS2614: Module '"./foo"' has no exported member 'fizz'. While bar.ts:
+
+import fizz from "./foo";
+Results in fizz === foo, which is probably unexpected and difficult to debug.
+
+Additionally, default exports encourage people to put everything into one big object to namespace it all together:
+
+export default class Foo {
+  static SOME_CONSTANT = ...
+  static someHelpfulFunction() { ... }
+  ...
+}
+With the above pattern, we have file scope, which can be used as a namespace. We also have a perhaps needless second scope (the class Foo) that can be ambiguously used as both a type and a value in other files.
+
+Instead, prefer use of file scope for namespacing, as well as named exports:
+
+export const SOME_CONSTANT = ...
+export function someHelpfulFunction()
+export class Foo {
+  // only class stuff here
+}
+Export visibilitycopy link to the clipboard
+TypeScript does not support restricting the visibility for exported symbols. Only export symbols that are used outside of the module. Generally minimize the exported API surface of modules.
+
+Mutable Exportscopy link to the clipboard
+Regardless of technical support, mutable exports can create hard to understand and debug code, in particular with re-exports across multiple modules. One way to paraphrase this style point is that export let is not allowed.
+
+export let foo = 3;
+// In pure ES6, foo is mutable and importers will observe the value change after a second.
+// In TS, if foo is re-exported by a second file, importers will not see the value change.
+window.setTimeout(() => {
+  foo = 4;
+}, 1000 /* ms */);
+If one needs to support externally accessible and mutable bindings, they should instead use explicit getter functions.
+
+let foo = 3;
+window.setTimeout(() => {
+  foo = 4;
+}, 1000 /* ms */);
+// Use an explicit getter to access the mutable export.
+export function getFoo() {
+  return foo;
+}
+For the common pattern of conditionally exporting either of two values, first do the conditional check, then the export. Make sure that all exports are final after the module's body has executed.
+
+function pickApi() {
+  if (useOtherApi()) return OtherApi;
+  return RegularApi;
+}
+export const SomeApi = pickApi();
+Container Classescopy link to the clipboard
+Do not create container classes with static methods or properties for the sake of namespacing.
+
+export class Container {
+  static FOO = 1;
+  static bar() {
+    return 1;
+  }
+}
+Instead, export individual constants and functions:
+
+export const FOO = 1;
+export function bar() {
+  return 1;
+}
+Importscopy link to the clipboard
+There are four variants of import statements in ES6 and TypeScript:
+
+Import type	Example	Use for
+module	`import * as foo from	TypeScript imports
+destructuring	`import {SomeThing} from	TypeScript imports
+default	`import SomeThing from	Only for other external code that requires them
+side-effect	import '...';	Only to import libraries for their side-effects on load (such as custom elements)
+// Good: choose between two options as appropriate (see below).
+import * as ng from "@angular/core";
+import { Foo } from "./foo";
+
+// Only when needed: default imports.
+import Button from "Button";
+
+// Sometimes needed to import libraries for their side effects:
+import "jasmine";
+import "@polymer/paper-button";
+Module versus destructuring importscopy link to the clipboard
+Both module and destructuring imports have advantages depending on the situation.
+
+Despite the *, a module import is not comparable to a "wildcard" import as seen in other languages. Instead, module imports give a name to the entire module and each symbol reference mentions the module, which can make code more readable and gives autocompletion on all symbols in a module. They also require less import churn (all symbols are available), fewer name collisions, and allow terser names in the module that's imported. Module imports are particularly useful when using many different symbols from large APIs.
+
+Destructuring imports give local names for each imported symbol. They allow terser code when using the imported symbol, which is particularly useful for very commonly used symbols, such as Jasmine's describe and it.
+
+// Bad: overlong import statement of needlessly namespaced names.
+import {TableViewItem, TableViewHeader, TableViewRow, TableViewModel,
+  TableViewRenderer} from './tableview';
+let item: TableViewItem = ...;
+// Better: use the module for namespacing.
+import * as tableview from './tableview';
+let item: tableview.Item = ...;
+import * as testing from './testing';
+
+// All tests will use the same three functions repeatedly.
+// When importing only a few symbols that are used very frequently, also
+// consider importing the symbols directly (see below).
+testing.describe('foo', () => {
+  testing.it('bar', () => {
+    testing.expect(...);
+    testing.expect(...);
+  });
+});
+// Better: give local names for these common functions.
+import {describe, it, expect} from './testing';
+
+describe('foo', () => {
+  it('bar', () => {
+    expect(...);
+    expect(...);
+  });
+});
+...
+Renaming importscopy link to the clipboard
+Code should fix name collisions by using a module import or renaming the exports themselves. Code may rename imports (import {SomeThing as SomeOtherThing}) if needed.
+
+Three examples where renaming can be helpful:
+
+If it's necessary to avoid collisions with other imported symbols.
+If the imported symbol name is generated.
+If importing symbols whose names are unclear by themselves, renaming can improve code clarity. For example, when using RxJS the from function might be more readable when renamed to observableFrom.
+Import & export typecopy link to the clipboard
+Do not use import type ... from or export type ... from.
+
+Note: this does not apply to exporting type definitions, i.e. export type Foo = ...;.
+
+import type { Foo } from "./foo";
+export type { Bar } from "./bar";
+Instead, just use regular imports:
+
+import { Foo } from "./foo";
+export { Bar } from "./bar";
+TypeScript tooling automatically distinguishes symbols used as types vs symbols used as values and only generates runtime loads for the latter.
+
+Why?
+TypeScript tooling automatically handles the distinction and does not insert runtime loads for type references. This gives a better developer UX: toggling back and forth between import type and import is bothersome. At the same time, import type gives no guarantees: your code might still have a hard dependency on some import through a different transitive path.
+
+If you need to force a runtime load for side effects, use import '...';. See the imports.
+
+export type might seem useful to avoid ever exporting a value symbol for an API. However it does not give guarantees either: downstream code might still import an API through a different path. A better way to split & guarantee type vs value usages of an API is to actually split the symbols into e.g. UserService and AjaxUserService. This is less error prone and also better communicates intent.
+
+Organize By Featurecopy link to the clipboard
+Organize packages by feature, not by type. For example, an online shop should have packages named products, checkout, backend, not views, models, controllers.
+
+Type Systemcopy link to the clipboard
+Type Inferencecopy link to the clipboard
+Code may rely on type inference as implemented by the TypeScript compiler for all type expressions (variables, fields, return types, etc). The google3 compiler flags reject code that does not have a type annotation and cannot be inferred, so all code is guaranteed to be typed (but might use the any type explicitly).
+
+const x = 15; // Type inferred.
+Leave out type annotations for trivially inferred types: variables or parameters initialized to a string, number, boolean, RegExp literal or new expression.
+
+const x: boolean = true; // Bad: 'boolean' here does not aid readability
+// Bad: 'Set' is trivially inferred from the initialization
+const x: Set<string> = new Set();
+const x = new Set<string>();
+For more complex expressions, type annotations can help with readability of the program. Whether an annotation is required is decided by the code reviewer.
+
+Return typescopy link to the clipboard
+Whether to include return type annotations for functions and methods is up to the code author. Reviewers may ask for annotations to clarify complex return types that are hard to understand. Projects may have a local policy to always require return types, but this is not a general TypeScript style requirement.
+
+There are two benefits to explicitly typing out the implicit return values of functions and methods:
+
+More precise documentation to benefit readers of the code.
+Surface potential type errors faster in the future if there are code changes that change the return type of the function.
+Null vs Undefinedcopy link to the clipboard
+TypeScript supports null and undefined types. Nullable types can be constructed as a union type (string|null); similarly with undefined. There is no special syntax for unions of null and undefined.
+
+TypeScript code can use either undefined or null to denote absence of a value, there is no general guidance to prefer one over the other. Many JavaScript APIs use undefined (e.g. Map.get), while many DOM and Google APIs use null (e.g. Element.getAttribute), so the appropriate absent value depends on the context.
+
+Nullable/undefined type aliasescopy link to the clipboard
+Type aliases must not include |null or |undefined in a union type. Nullable aliases typically indicate that null values are being passed around through too many layers of an application, and this clouds the source of the original issue that resulted in null. They also make it unclear when specific values on a class or interface might be absent.
+
+Instead, code must only add |null or |undefined when the alias is actually used. Code should deal with null values close to where they arise, using the above techniques.
+
+// Bad
+type CoffeeResponse = Latte|Americano|undefined;
+
+class CoffeeService {
+  getLatte(): CoffeeResponse { ... };
+}
+// Better
+type CoffeeResponse = Latte|Americano;
+
+class CoffeeService {
+  getLatte(): CoffeeResponse|undefined { ... };
+}
+// Best
+type CoffeeResponse = Latte | Americano;
+
+class CoffeeService {
+  getLatte(): CoffeeResponse {
+    return assert(fetchResponse(), "Coffee maker is broken, file a ticket");
+  }
+}
+Optionals vs |undefined typecopy link to the clipboard
+In addition, TypeScript supports a special construct for optional parameters and fields, using ?:
+
+interface CoffeeOrder {
+  sugarCubes: number;
+  milk?: Whole|LowFat|HalfHalf;
+}
+
+function pourCoffee(volume?: Milliliter) { ... }
+Optional parameters implicitly include |undefined in their type. However, they are different in that they can be left out when constructing a value or calling a method. For example, {sugarCubes: 1} is a valid CoffeeOrder because milk is optional.
+
+Use optional fields (on interfaces or classes) and parameters rather than a |undefined type.
+
+For classes preferably avoid this pattern altogether and initialize as many fields as possible.
+
+class MyClass {
+  field = "";
+}
+Structural Types vs Nominal Typescopy link to the clipboard
+TypeScript's type system is structural, not nominal. That is, a value matches a type if it has at least all the properties the type requires and the properties' types match, recursively.
+
+Use structural typing where appropriate in your code. Outside of test code, use interfaces to define structural types, not classes. In test code it can be useful to have mock implementations structurally match the code under test without introducing an extra interface.
+
+When providing a structural-based implementation, explicitly include the type at the declaration of the symbol (this allows more precise type checking and error reporting).
+
+const foo: Foo = {
+  a: 123,
+  b: "abc",
+};
+const badFoo = {
+  a: 123,
+  b: "abc",
+};
+Why?
+The "badFoo" object above relies on type inference. Additional fields could be added to "badFoo" and the type is inferred based on the object itself.
+
+When passing a "badFoo" to a function that takes a "Foo", the error will be at the function call site, rather than at the object declaration site. This is also useful when changing the surface of an interface across broad codebases.
+
+interface Animal {
+  sound: string;
+  name: string;
+}
+
+function makeSound(animal: Animal) {}
+
+/**
+ * 'cat' has an inferred type of '{sound: string}'
+ */
+const cat = {
+  sound: "meow",
+};
+
+/**
+ * 'cat' does not meet the type contract required for the function, so the
+ * TypeScript compiler errors here, which may be very far from where 'cat' is
+ * defined.
+ */
+makeSound(cat);
+
+/**
+ * Horse has a structural type and the type error shows here rather than the
+ * function call.  'horse' does not meet the type contract of 'Animal'.
+ */
+const horse: Animal = {
+  sound: "niegh",
+};
+
+const dog: Animal = {
+  sound: "bark",
+  name: "MrPickles",
+};
+
+makeSound(dog);
+makeSound(horse);
+Interfaces vs Type Aliasescopy link to the clipboard
+TypeScript supports type aliases for naming a type expression. This can be used to name primitives, unions, tuples, and any other types.
+
+However, when declaring types for objects, use interfaces instead of a type alias for the object literal expression.
+
+interface User {
+  firstName: string;
+  lastName: string;
+}
+type User = {
+  firstName: string;
+  lastName: string;
+};
+Why?
+These forms are nearly equivalent, so under the principle of just choosing one out of two forms to prevent variation, we should choose one. Additionally, there also interesting technical reasons to prefer interface. That page quotes the TypeScript team lead: "Honestly, my take is that it should really just be interfaces for anything that they can model. There is no benefit to type aliases when there are so many issues around display/perf."
+
+Array<T> Typecopy link to the clipboard
+For simple types (containing just alphanumeric characters and dot), use the syntax sugar for arrays, T[], rather than the longer form Array<T>.
+
+For anything more complex, use the longer form Array<T>.
+
+This also applies for readonly T[] vs ReadonlyArray<T>.
+
+const a: string[];
+const b: readonly string[];
+const c: ns.MyObj[];
+const d: Array<string | number>;
+const e: ReadonlyArray;
+const f: Array<string>; // the syntax sugar is shorter
+const g: ReadonlyArray;
+const h: { n: number; s: string }[]; // the braces/parens make it harder to read
+const i: (string | number)[];
+const j: readonly (string | number)[];
+Indexable ({[key: string]: number}) Typecopy link to the clipboard
+In JavaScript, it's common to use an object as an associative array (aka "map", "hash", or "dict"):
+
+const fileSizes: { [fileName: string]: number } = {};
+fileSizes["readme.txt"] = 541;
+In TypeScript, provide a meaningful label for the key. (The label only exists for documentation; it's unused otherwise.)
+
+const users: {[key: string]: number} = ...;
+const users: {[userName: string]: number} = ...;
+Rather than using one of these, consider using the ES6 Map and Set types instead. JavaScript objects have surprising undesirable behaviors and the ES6 types more explicitly convey your intent. Also, Maps can be keyed by—and Sets can contain—types other than string.
+
+TypeScript's builtin Record<Keys, ValueType> type allows constructing types with a defined set of keys. This is distinct from associative arrays in that the keys are statically known. See advice on that below.
+
+Mapped & Conditional Typescopy link to the clipboard
+TypeScript's mapped types and conditional types allow specifying new types based on other types. TypeScript's standard library includes several type operators based on these (Record, Partial, Readonly etc).
+
+These type system features allow succinctly specifying types and constructing powerful yet type safe abstractions. They come with a number of drawbacks though:
+
+Compared to explicitly specifying properties and type relations (e.g. using interfaces and extension, see below for an example), type operators require the reader to mentally evaluate the type expression. This can make programs substantially harder to read, in particular combined with type inference and expressions crossing file boundaries.
+Mapped & conditional types' evaluation model, in particular when combined with type inference, is underspecified, not always well understood, and often subject to change in TypeScript compiler versions. Code can "accidentally" compile or seem to give the right results. This increases future support cost of code using type operators.
+Mapped & conditional types are most powerful when deriving types from complex and/or inferred types. On the flip side, this is also when they are most prone to create hard to understand and maintain programs.
+Some language tooling does not work well with these type system features. E.g. your IDE's find references (and thus rename property refactoring) will not find properties in a Pick<T, Keys> type, and Code Search won't hyperlink them.
+The style recommendation is:
+
+Always use the simplest type construct that can possibly express your code.
+A little bit of repetition or verbosity is often much cheaper than the long term cost of complex type expressions.
+Mapped & conditional types may be used, subject to these considerations.
+For example, TypeScript's builtin `Pick` type allows creating a new type by subsetting another type `T`, but simple interface extension can often be easier to understand.
+interface User {
+  shoeSize: number;
+  favoriteIcecream: string;
+  favoriteChocolate: string;
+}
+
+// FoodPreferences has favoriteIcecream and favoriteChocolate, but not shoeSize.
+type FoodPreferences = Pick<User, "favoriteIcecream" | "favoriteChocolate">;
+This is equivalent to spelling out the properties on FoodPreferences:
+
+interface FoodPreferences {
+  favoriteIcecream: string;
+  favoriteChocolate: string;
+}
+To reduce duplication, User could extend FoodPreferences, or (possibly better) nest a field for food preferences:
+
+interface FoodPreferences {
+  /* as above */
+}
+interface User extends FoodPreferences {
+  shoeSize: number;
+  // also includes the preferences.
+}
+Using interfaces here makes the grouping of properties explicit, improves IDE support, allows better optimization, and arguably makes the code easier to understand.
+
+any Typecopy link to the clipboard
+TypeScript's any type is a super and subtype of all other types, and allows dereferencing all properties. As such, any is dangerous - it can mask severe programming errors, and its use undermines the value of having static types in the first place.
+
+Consider not to use any. In circumstances where you want to use any, consider one of:
+
+Provide a more specific type
+Use unknown
+Suppress the lint warning and document why
+Providing a more specific typecopy link to the clipboard
+Use interfaces, an inline object type, or a type alias:
+
+// Use declared interfaces to represent server-side JSON.
+declare interface MyUserJson {
+  name: string;
+  email: string;
+}
+
+// Use type aliases for types that are repetitive to write.
+type MyType = number | string;
+
+// Or use inline object types for complex returns.
+function getTwoThings(): { something: number; other: string } {
+  // ...
+  return { something, other };
+}
+
+// Use a generic type, where otherwise a library would say `any` to represent
+// they don't care what type the user is operating on (but note "Return type
+// only generics" below).
+function nicestElement<T>(items: T[]): T {
+  // Find the nicest element in items.
+  // Code can also put constraints on T, e.g. .
+}
+Using unknown over anycopy link to the clipboard
+The any type allows assignment into any other type and dereferencing any property off it. Often this behaviour is not necessary or desirable, and code just needs to express that a type is unknown. Use the built-in type unknown in that situation — it expresses the concept and is much safer as it does not allow dereferencing arbitrary properties.
+
+// Can assign any value (including null or undefined) into this but cannot
+// use it without narrowing the type or casting.
+const val: unknown = value;
+const danger: any = value; /* result of an arbitrary expression */
+danger.whoops(); // This access is completely unchecked!
+To safely use unknown values, narrow the type using a type guard
+
+Suppressing any lint warningscopy link to the clipboard
+Sometimes using any is legitimate, for example in tests to construct a mock object. In such cases, add a comment that suppresses the lint warning, and document why it is legitimate.
+
+// This test only needs a partial implementation of BookService, and if
+// we overlooked something the test will fail in an obvious way.
+// This is an intentionally unsafe partial mock
+// tslint:disable-next-line:no-any
+const mockBookService = ({
+  get() {
+    return mockBook;
+  },
+} as any) as BookService;
+// Shopping cart is not used in this test
+// tslint:disable-next-line:no-any
+const component = new MyComponent(
+  mockBookService,
+  /* unused ShoppingCart */ null as any
+);
+Tuple Typescopy link to the clipboard
+If you are tempted to create a Pair type, instead use a tuple type:
+
+interface Pair {
+  first: string;
+  second: string;
+}
+function splitInHalf(input: string): Pair {
+  ...
+  return {first: x, second: y};
+}
+function splitInHalf(input: string): [string, string] {
+  ...
+  return [x, y];
+}
+
+// Use it like:
+const [leftHalf, rightHalf] = splitInHalf('my string');
+However, often it's clearer to provide meaningful names for the properties.
+
+If declaring an interface is too heavyweight, you can use an inline object literal type:
+
+function splitHostPort(address: string): {host: string, port: number} {
+  ...
+}
+
+// Use it like:
+const address = splitHostPort(userAddress);
+use(address.port);
+
+// You can also get tuple-like behavior using destructuring:
+const {host, port} = splitHostPort(userAddress);
+Wrapper typescopy link to the clipboard
+There are a few types related to JavaScript primitives that should never be used:
+
+String, Boolean, and Number have slightly different meaning from the corresponding primitive types string, boolean, and number. Always use the lowercase version.
+Object has similarities to both {} and object, but is slightly looser. Use {} for a type that include everything except null and undefined, or lowercase object to further exclude the other primitive types (the three mentioned above, plus symbol and bigint).
+Further, never invoke the wrapper types as constructors (with new).
+
+Return type only genericscopy link to the clipboard
+Avoid creating APIs that have return type only generics. When working with existing APIs that have return type only generics always explicitly specify the generics.
+
+Consistencycopy link to the clipboard
+For any style question that isn't settled definitively by this specification, do what the other code in the same file is already doing ("be consistent"). If that doesn't resolve the question, consider emulating the other files in the same directory.
+
+
+React rules ;
+2.1. Use meaningful component names
+2.2. Break down components
+2.3. Use destructuring
+2.4. Keep components small
+2.5. Use prop-types
+2.6. Use functional components
+2.7. Avoid using inline styles
+2.8. Use arrow functions
+2.9. Use stateless components
+2.10. Use the spread operator
+
+Purity in Components and Hooks is a key rule of React that makes your app predictable, easy to debug, and allows React to automatically optimize your code.
+
+Components must be idempotent – React components are assumed to always return the same output with respect to their inputs – props, state, and context.
+Side effects must run outside of render – Side effects should not run in render, as React can render components multiple times to create the best possible user experience.
+Props and state are immutable – A component’s props and state are immutable snapshots with respect to a single render. Never mutate them directly.
+Return values and arguments to Hooks are immutable – Once values are passed to a Hook, you should not modify them. Like props in JSX, values become immutable when passed to a Hook.
+Values are immutable after being passed to JSX – Don’t mutate values after theyve been used in JSX. Move the mutation before the JSX is created.
+React calls Components and Hooks 
+React is responsible for rendering components and hooks when necessary to optimize the user experience. It is declarative: you tell React what to render in your component’s logic, and React will figure out how best to display it to your user.
+
+Never call component functions directly  Components should only be used in JSX. Dont call them as regular functions.
+Never pass around hooks as regular values Hooks should only be called inside of components. Never pass it around as a regular value.
+Rules of Hooks 
+Hooks are defined using JavaScript functions, but they represent a special type of reusable UI logic with restrictions on where they can be called. You need to follow the Rules of Hooks when using them.
+
+Only call Hooks at the top level  Dont call Hooks inside loops, conditions, or nested functions. Instead, always use Hooks at the top level of your React function, before any early returns.
+Only call Hooks from React functions  Dont call Hooks from regular JavaScript functions.
+Never pass around Hooks as regular values
+Don’t dynamically mutate a Hook 
+Don’t dynamically use Hooks 
+Only call Hooks at the top level 
+It’s not supported to call Hooks (functions starting with use) in any other cases, for example:
+
+🔴 Do not call Hooks inside conditions or loops.
+🔴 Do not call Hooks after a conditional return statement.
+🔴 Do not call Hooks in event handlers.
+Do not call Hooks in class components.
+ Do not call Hooks inside functions passed to useMemo, useReducer, or useEffect.
+ Do not call Hooks inside try/catch/finally blocks.
