@@ -4,11 +4,11 @@ import { ToggleButton } from '../sidebar/toggle-button';
 import { twMerge } from 'tailwind-merge';
 
 interface IHeaderProps {
-  className?: string;
+  readonly className?: string;
 }
 
-export function Header({ className }: IHeaderProps) {
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+export function Header({ className }: Readonly<IHeaderProps>) {
+  const handleSearchInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     // Handle search change
     console.log(event.target.value);
   };
@@ -23,6 +23,8 @@ export function Header({ className }: IHeaderProps) {
     console.log('Profile clicked');
   };
 
+  const [isSearchFocused, setIsSearchFocused] = React.useState(false);
+
   return (
     <header 
       className={twMerge(
@@ -34,13 +36,19 @@ export function Header({ className }: IHeaderProps) {
       <div className="flex items-center gap-4">
         <ToggleButton />
         
-        <div className="hidden md:flex items-center gap-2 rounded-md border px-3 py-1.5">
+        <div className={twMerge(
+          "hidden md:flex items-center gap-2 rounded-md border px-3 py-1.5",
+          isSearchFocused && "border-primary"
+        )}>
           <Search className="h-4 w-4 text-gray-400" />
           <input
             type="text"
             placeholder="Search..."
             className="bg-transparent outline-none placeholder:text-gray-400"
-            onChange={handleSearchChange}
+            onChange={handleSearchInputChange}
+            onFocus={() => setIsSearchFocused(true)}
+            onBlur={() => setIsSearchFocused(false)}
+            aria-label="Search"
           />
         </div>
       </div>
