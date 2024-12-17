@@ -22,24 +22,37 @@ interface IViewing {
   };
 }
 
+interface IViewingSlot {
+  readonly id: string;
+  readonly time: string;
+  readonly prospect: string;
+  readonly email: string;
+  readonly status: "confirmed" | "pending";
+  readonly property: string;
+}
+
+interface ISlotSummary {
+  readonly booked: number;
+  readonly total: number;
+}
+
 interface IViewingSchedule {
-  id: string;
-  property: string;
-  address: string;
-  status: "confirmed" | "pending";
-  date: string;
-  time: string;
-  slots: {
-    booked: number;
-    total: number;
-  };
+  readonly id: string;
+  readonly property: string;
+  readonly unit?: string;
+  readonly address: string;
+  readonly date: string;
+  readonly time: string;
+  readonly agent: string;
+  readonly status: "confirmed" | "pending";
+  readonly slots: ISlotSummary;
 }
 
 interface IViewingScheduleCardProps {
   schedule: IViewingSchedule;
 }
 
-const VIEWING_SCHEDULES: IViewingSchedule[] = [
+const VIEWING_SCHEDULES: ReadonlyArray<IViewingSchedule> = [
   {
     id: "1",
     property: "Wharnof Property",
@@ -47,6 +60,7 @@ const VIEWING_SCHEDULES: IViewingSchedule[] = [
     status: "confirmed",
     date: "Thursday, 15th of November, 2024",
     time: "2:00PM to 6:00PM",
+    agent: "Debra Holt",
     slots: { booked: 6, total: 8 }
   },
   {
@@ -56,6 +70,7 @@ const VIEWING_SCHEDULES: IViewingSchedule[] = [
     status: "pending",
     date: "Friday 16th of November, 2024",
     time: "10:00PM to 6:00PM",
+    agent: "Debra Holt",
     slots: { booked: 8, total: 8 }
   },
   {
@@ -65,6 +80,7 @@ const VIEWING_SCHEDULES: IViewingSchedule[] = [
     status: "confirmed",
     date: "Monday 19th of November, 2024",
     time: "2:00PM to 6:00PM",
+    agent: "Debra Holt",
     slots: { booked: 6, total: 8 }
   },
   {
@@ -74,6 +90,7 @@ const VIEWING_SCHEDULES: IViewingSchedule[] = [
     status: "confirmed",
     date: "Tuesday 20th of November, 2024",
     time: "1:00PM to 5:00PM",
+    agent: "Debra Holt",
     slots: { booked: 4, total: 8 }
   },
   {
@@ -83,6 +100,7 @@ const VIEWING_SCHEDULES: IViewingSchedule[] = [
     status: "pending",
     date: "Wednesday 23rd of November, 2024",
     time: "9:00AM to 1:00PM",
+    agent: "Debra Holt",
     slots: { booked: 3, total: 6 }
   },
   {
@@ -92,6 +110,7 @@ const VIEWING_SCHEDULES: IViewingSchedule[] = [
     status: "confirmed",
     date: "Thursday 24th of November, 2024",
     time: "1:00PM to 5:00PM",
+    agent: "Debra Holt",
     slots: { booked: 7, total: 8 }
   },
   {
@@ -101,6 +120,7 @@ const VIEWING_SCHEDULES: IViewingSchedule[] = [
     status: "confirmed",
     date: "Friday 25th of November, 2024",
     time: "11:00AM to 3:00PM",
+    agent: "Debra Holt",
     slots: { booked: 5, total: 8 }
   },
   {
@@ -110,6 +130,7 @@ const VIEWING_SCHEDULES: IViewingSchedule[] = [
     status: "pending",
     date: "Monday 28th of November, 2024",
     time: "2:00PM to 6:00PM",
+    agent: "Debra Holt",
     slots: { booked: 4, total: 6 }
   },
   {
@@ -119,6 +140,7 @@ const VIEWING_SCHEDULES: IViewingSchedule[] = [
     status: "confirmed",
     date: "Tuesday 29th of November, 2024",
     time: "10:00AM to 2:00PM",
+    agent: "Debra Holt",
     slots: { booked: 6, total: 8 }
   },
   {
@@ -128,7 +150,43 @@ const VIEWING_SCHEDULES: IViewingSchedule[] = [
     status: "pending",
     date: "Wednesday 30th of November, 2024",
     time: "3:00PM to 7:00PM",
+    agent: "Debra Holt",
     slots: { booked: 2, total: 6 }
+  }
+];
+
+const mockViewingSlots: ReadonlyArray<IViewingSlot> = [
+  {
+    id: "1",
+    time: "8:00 AM - 8:30 AM",
+    prospect: "Olivia Rodriguez",
+    email: "olivia@example.com",
+    status: "confirmed",
+    property: "Wharnof Property"
+  },
+  {
+    id: "2",
+    time: "8:30 AM - 9:00 AM",
+    prospect: "Sophia Lee",
+    email: "sophia@example.com",
+    status: "pending",
+    property: "Wharnof Property"
+  },
+  {
+    id: "3",
+    time: "9:00 AM - 9:30 AM",
+    prospect: "Ethan Thompson",
+    email: "ethan@example.com",
+    status: "confirmed",
+    property: "Wharnof Property"
+  },
+  {
+    id: "4",
+    time: "9:30 AM - 10:00 AM",
+    prospect: "Olivia Rodriguez",
+    email: "olivia@example.com",
+    status: "pending",
+    property: "Wharnof Property"
   }
 ];
 
@@ -141,52 +199,50 @@ function ViewingScheduleCard({ schedule }: IViewingScheduleCardProps) {
 
   return (
     <>
-      <Card className="p-6 bg-white rounded-lg">
-        <div className="flex flex-col gap-4">
-          <div className="flex items-start justify-between">
-            <div>
-              <h3 className="font-medium text-gray-900">{schedule.property}</h3>
-              <div className="flex items-center text-sm text-gray-500 mt-2">
-                <MapPin className="mr-2 h-4 w-4 text-sky-500 flex-shrink-0" />
-                {schedule.address}
-              </div>
-            </div>
-            <Badge 
-              variant="outline"
-              className={cn(
-                "font-normal px-3 py-1",
-                schedule.status === "confirmed" 
-                  ? "text-emerald-600 bg-emerald-50" 
-                  : "text-amber-600 bg-amber-50"
-              )}
-            >
-              {schedule.status === "confirmed" ? "Felicity confirmed" : "Pending"}
-            </Badge>
-          </div>
-
-          <div className="flex flex-col gap-2.5 text-sm text-gray-500">
-            <div className="flex items-center">
-              <Calendar className="mr-2 h-4 w-4 text-sky-500 flex-shrink-0" />
-              {schedule.date}
-            </div>
-            <div className="flex items-center">
-              <Clock className="mr-2 h-4 w-4 text-sky-500 flex-shrink-0" />
-              {schedule.time}
-            </div>
-            <div className="flex items-center">
-              <Users className="mr-2 h-4 w-4 text-sky-500 flex-shrink-0" />
-              {schedule.slots.booked} of {schedule.slots.total} slots booked
-            </div>
-          </div>
-
-          <Button 
-            variant="outline" 
-            className="w-full text-gray-600 hover:bg-gray-50 font-normal"
-            onClick={handleViewDetails}
+      <Card className="p-4 bg-white">
+        <div className="flex justify-between items-start pb-3 mb-4 border-b border-gray-100">
+          <h3 className="text-base font-medium text-gray-900">{schedule.property}</h3>
+          <Badge 
+            variant="secondary" 
+            className={cn(
+              "font-medium text-xs px-2 py-0.5 rounded",
+              schedule.status === "confirmed" 
+                ? "text-emerald-600 bg-emerald-50" 
+                : "text-amber-600 bg-amber-50"
+            )}
           >
-            View Details
-          </Button>
+            {schedule.status === "confirmed" ? "Felicity confirmed" : "Pending"}
+          </Badge>
         </div>
+
+        <div className="space-y-3">
+          <div className="flex gap-2 text-gray-600">
+            <MapPin className="h-4 w-4 text-sky-500 shrink-0 mt-0.5" />
+            <span className="text-sm">{schedule.address}</span>
+          </div>
+
+          <div className="flex gap-2 text-gray-600">
+            <Calendar className="h-4 w-4 text-sky-500 shrink-0 mt-0.5" />
+            <span className="text-sm">{schedule.date}</span>
+          </div>
+
+          <div className="flex gap-2 text-gray-600">
+            <Clock className="h-4 w-4 text-sky-500 shrink-0 mt-0.5" />
+            <span className="text-sm">{schedule.time}</span>
+          </div>
+
+          <div className="flex gap-2 text-gray-600">
+            <Users className="h-4 w-4 text-sky-500 shrink-0 mt-0.5" />
+            <span className="text-sm">{schedule.slots.booked} of {schedule.slots.total} slots booked</span>
+          </div>
+        </div>
+
+        <button 
+          onClick={handleViewDetails}
+          className="w-full mt-4 py-2 text-center text-sm font-medium text-gray-700 border border-gray-200 rounded-md hover:bg-gray-50"
+        >
+          View Details
+        </button>
       </Card>
 
       <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
@@ -199,36 +255,7 @@ function ViewingScheduleCard({ schedule }: IViewingScheduleCardProps) {
               date: schedule.date,
               time: schedule.time,
               agent: "Debra Holt",
-              slots: [
-                {
-                  id: "1",
-                  time: "8:00 AM - 8:30 AM",
-                  prospect: "Olivia Rodriguez",
-                  email: "olivia@example.com",
-                  status: "confirmed"
-                },
-                {
-                  id: "2",
-                  time: "8:30 AM - 9:00 AM",
-                  prospect: "Sophia Lee",
-                  email: "sophia@example.com",
-                  status: "pending"
-                },
-                {
-                  id: "3",
-                  time: "9:00 AM - 9:30 AM",
-                  prospect: "Ethan Thompson",
-                  email: "ethan@example.com",
-                  status: "confirmed"
-                },
-                {
-                  id: "4",
-                  time: "9:30 AM - 10:00 AM",
-                  prospect: "Olivia Rodriguez",
-                  email: "olivia@example.com",
-                  status: "pending"
-                }
-              ]
+              slots: mockViewingSlots
             }}
             onClose={() => setIsDetailsOpen(false)}
           />
@@ -241,14 +268,7 @@ function ViewingScheduleCard({ schedule }: IViewingScheduleCardProps) {
 export function ViewingSchedules() {
   const [isViewingDetailsOpen, setIsViewingDetailsOpen] = React.useState(false);
   const [isAllViewingsVisible, setIsAllViewingsVisible] = React.useState(false);
-  
-  const handleViewingStatusChange = (viewing: IViewing) => {
-    // ... implementation
-  };
-
-  const handleViewingDetailsOpen = (id: string) => {
-    setIsViewingDetailsOpen(true);
-  };
+  const [selectedViewing, setSelectedViewing] = React.useState<IViewingSchedule | null>(null);
 
   const scrollContainerRef = React.useRef<HTMLDivElement>(null);
 
@@ -256,6 +276,11 @@ export function ViewingSchedules() {
     if (scrollContainerRef.current) {
       scrollContainerRef.current.scrollBy({ left: 340, behavior: 'smooth' });
     }
+  };
+
+  const handleViewAll = (schedule: IViewingSchedule) => {
+    setSelectedViewing(schedule);
+    setIsViewingDetailsOpen(true);
   };
 
   return (
@@ -305,6 +330,25 @@ export function ViewingSchedules() {
           <ViewAllViewings />
         </DialogContent>
       </Dialog>
+
+      {selectedViewing && (
+        <Dialog open={isViewingDetailsOpen} onOpenChange={setIsViewingDetailsOpen}>
+          <DialogContent className="max-w-4xl">
+            <ViewingDetails
+              viewing={{
+                id: selectedViewing.id,
+                property: selectedViewing.property,
+                address: selectedViewing.address,
+                date: selectedViewing.date,
+                time: selectedViewing.time,
+                agent: selectedViewing.agent,
+                slots: mockViewingSlots
+              }}
+              onClose={() => setIsViewingDetailsOpen(false)}
+            />
+          </DialogContent>
+        </Dialog>
+      )}
     </>
   )
 } 

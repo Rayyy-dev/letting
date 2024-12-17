@@ -12,21 +12,21 @@ import { Switch } from "../ui/switch"
 import { Building2, CalendarDays, Clock, TimerOff } from "lucide-react"
 
 export interface INewSchedule {
-  property: string;
-  unit: string;
-  isRecurring: boolean;
-  date: string;
-  startTime: string;
-  endTime: string;
-  slotDuration: "15" | "30";
+  readonly property: string;
+  readonly unit: string;
+  readonly isRecurring: boolean;
+  readonly date: string;
+  readonly startTime: string;
+  readonly endTime: string;
+  readonly slotDuration: "15" | "30";
 }
 
 interface IAddScheduleProps {
-  onClose: () => void;
-  onAdd: (schedule: INewSchedule) => void;
+  readonly onClose: () => void;
+  readonly onAdd: (schedule: INewSchedule) => void;
 }
 
-export function AddSchedule({ onClose, onAdd }: IAddScheduleProps) {
+export function AddSchedule({ onClose, onAdd }: Readonly<IAddScheduleProps>) {
   const [schedule, setSchedule] = React.useState<INewSchedule>({
     property: "",
     unit: "",

@@ -10,6 +10,12 @@
 
 # production
 /build
+/dist
+/.next
+
+# IDE and history
+.history/
+.cursorrules
 
 # misc
 .DS_Store
@@ -18,9 +24,8 @@
 .env.test.local
 .env.production.local
 
+# logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-.cursorrules 
-.history
-/.history
+*.log
