@@ -13,9 +13,9 @@ import {
 import { Input } from "../ui/input"
 
 interface IViewingDayTable {
-  date: string;
-  viewings: IViewing[];
-  onViewingUpdate: (viewing: IViewing) => void;
+  readonly date: string;
+  readonly viewings: ReadonlyArray<IViewing>;
+  readonly onViewingUpdate: (viewing: IViewing) => void;
 }
 
 interface IViewing {
@@ -32,7 +32,7 @@ interface IViewing {
   };
 }
 
-export function ViewingDayTable({ date, viewings, onViewingUpdate }: IViewingDayTable) {
+export function ViewingDayTable({ date, viewings, onViewingUpdate }: Readonly<IViewingDayTable>) {
   const [agentSearch, setAgentSearch] = React.useState("")
 
   const agents = [

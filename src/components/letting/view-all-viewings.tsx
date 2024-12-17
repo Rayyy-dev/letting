@@ -12,23 +12,23 @@ import {
 } from "../ui/dropdown-menu"
 
 interface IViewAllViewingsProps {
-  onClose?: () => void;
+  readonly onClose?: () => void;
 }
 
 interface IViewingProperty {
-  id: string;
-  property: string;
-  address: string;
-  date: string;
-  time: string;
-  status: "confirmed" | "pending";
-  slots: {
-    booked: number;
-    total: number;
+  readonly id: string;
+  readonly property: string;
+  readonly address: string;
+  readonly date: string;
+  readonly time: string;
+  readonly status: "confirmed" | "pending";
+  readonly slots: {
+    readonly booked: number;
+    readonly total: number;
   };
 }
 
-function StatusBadge({ status }: { status: "confirmed" | "pending" }) {
+function StatusBadge({ status }: Readonly<{ status: "confirmed" | "pending" }>) {
   return (
     <Badge 
       variant="secondary"
@@ -44,7 +44,7 @@ function StatusBadge({ status }: { status: "confirmed" | "pending" }) {
   )
 }
 
-function OutcomeBadge({ outcome }: { outcome?: "visited" | "no show" }) {
+function OutcomeBadge({ outcome }: Readonly<{ outcome?: "visited" | "no show" }>) {
   if (!outcome) return null;
   
   return (

@@ -21,7 +21,7 @@ function StatsCard({ title, value, trend, lastUpdated }: Readonly<IStatsCardProp
       </div>
 
       <div className="mt-3 flex items-center gap-2">
-        <span className="text-2xl font-semibold text-gray-900">{value}</span>
+        <span className="text-3xl font-bold text-black">{value}</span>
         {trend && (
           <span className={cn(
             "text-xs flex items-center gap-0.5 font-medium",

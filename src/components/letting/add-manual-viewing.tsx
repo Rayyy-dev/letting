@@ -52,24 +52,20 @@ export function AddManualViewing({ isOpen, onClose, onSubmit, availableSlots }: 
             <DialogTitle className="text-xl font-semibold">
               Add Manual Viewing
             </DialogTitle>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="h-8 w-8"
-              onClick={onClose}
-            >
-              <X className="h-4 w-4" />
-            </Button>
           </div>
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-3">
             <div>
-              <label className="text-sm font-medium text-gray-900 mb-1.5 block">
+              <label 
+                htmlFor="prospect-name" 
+                className="text-sm font-medium text-gray-900 mb-1.5 block"
+              >
                 Name
               </label>
               <Input
+                id="prospect-name"
                 value={formData.name}
                 onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
                 className="h-10 border-gray-200"
@@ -79,10 +75,14 @@ export function AddManualViewing({ isOpen, onClose, onSubmit, availableSlots }: 
             </div>
 
             <div>
-              <label className="text-sm font-medium text-gray-900 mb-1.5 block">
+              <label 
+                htmlFor="prospect-email"
+                className="text-sm font-medium text-gray-900 mb-1.5 block"
+              >
                 Email
               </label>
               <Input
+                id="prospect-email"
                 type="email"
                 value={formData.email}
                 onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
@@ -93,10 +93,14 @@ export function AddManualViewing({ isOpen, onClose, onSubmit, availableSlots }: 
             </div>
 
             <div>
-              <label className="text-sm font-medium text-gray-900 mb-1.5 block">
+              <label 
+                htmlFor="prospect-phone"
+                className="text-sm font-medium text-gray-900 mb-1.5 block"
+              >
                 Phone
               </label>
               <Input
+                id="prospect-phone"
                 type="tel"
                 value={formData.phone}
                 onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
@@ -107,13 +111,17 @@ export function AddManualViewing({ isOpen, onClose, onSubmit, availableSlots }: 
             </div>
 
             <div>
-              <label className="text-sm font-medium text-gray-900 mb-1.5 block">
+              <label 
+                id="time-slot-label"
+                className="text-sm font-medium text-gray-900 mb-1.5 block"
+              >
                 Available Time Slots
               </label>
               <Select
                 value={formData.timeSlot}
                 onValueChange={(value) => setFormData(prev => ({ ...prev, timeSlot: value }))}
                 required
+                aria-labelledby="time-slot-label"
               >
                 <SelectTrigger className="h-10 border-gray-200">
                   <SelectValue placeholder="Select an available time slot" />

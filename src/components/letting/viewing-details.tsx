@@ -1,6 +1,14 @@
 import * as React from "react"
 import { Badge } from "../ui/badge"
-import { MapPin, Calendar, Clock, UserCircle, ChevronDown, X, ChevronLeft, ChevronRight } from "lucide-react"
+import { 
+  MapPin, 
+  Calendar, 
+  Clock, 
+  UserCircle, 
+  X,
+  ChevronLeft,
+  ChevronRight 
+} from "lucide-react"
 import { cn } from "../../lib/utils"
 import { format } from "date-fns"
 import { Calendar as CalendarPicker } from "../../components/ui/calendar"
@@ -25,7 +33,6 @@ import {
   TableHeader,
   TableRow,
 } from "../../components/ui/table"
-import { HOURS, MINUTES } from "../../types/viewing"
 import { AddManualViewing } from "./add-manual-viewing"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog"
 import { TimeSelector } from "./time-selector"
@@ -78,18 +85,38 @@ interface IScheduleConflict {
   readonly time: string;
 }
 
+const filterConflictingSlots = (slots: readonly IViewingSlot[], startTime: string, endTime: string) => {
+  return slots.filter(slot => {
+    const [slotStart] = slot.time.split(" - ");
+    const [slotHours, slotMinutes] = slotStart.split(":");
+    const slotTimeStr = `${slotHours.padStart(2, '0')}:${slotMinutes}`;
+    
+    return slotTimeStr >= endTime || slotTimeStr < startTime;
+  });
+};
+
+const filterNonConflictingSlots = (slots: readonly IViewingSlot[], conflictIds: readonly IConflictingSlot[]) => {
+  return slots.filter(slot => !conflictIds.find(conflict => conflict.id === slot.id));
+};
+
+const generateSecureId = (): string => {
+  const array = new Uint32Array(1);
+  crypto.getRandomValues(array);
+  return array[0].toString(36);
+};
+
 export function ViewingDetails({ viewing, onClose }: Readonly<IViewingDetailsProps>) {
   const [selectedDate, setSelectedDate] = React.useState<Date>(new Date());
   const [isDatePickerOpen, setIsDatePickerOpen] = React.useState(false);
   const [isEditing, setIsEditing] = React.useState(false);
-  const [slots, setSlots] = React.useState<IViewingSlot[]>([...viewing.slots]);
+  const [slots, setSlots] = React.useState<readonly IViewingSlot[]>([...viewing.slots]);
 
   // Display time state (non-editable)
   const [displayStartTime] = React.useState("14:00");
   const [displayEndTime] = React.useState("18:00");
 
   // Editable time state
-  const [timeRange, setTimeRange] = React.useState<ITimeState>({
+  const [timeRange, setTimeRange] = React.useState<Readonly<ITimeState>>({
     start: {
       hours: "14",
       minutes: "00"
@@ -126,17 +153,6 @@ export function ViewingDetails({ viewing, onClose }: Readonly<IViewingDetailsPro
     }
   };
 
-  const checkForConflicts = (newStartTime: string, newEndTime: string) => {
-    const conflicting = slots.filter(slot => {
-      const [slotStart] = slot.time.split(" - ");
-      const [slotHours, slotMinutes] = slotStart.split(":");
-      const slotTimeStr = `${slotHours.padStart(2, '0')}:${slotMinutes}`;
-      
-      return slotTimeStr >= newEndTime || slotTimeStr < newStartTime;
-    });
-    return conflicting;
-  };
-
   const handleTimeChange = (type: "start" | "end", field: "hours" | "minutes", value: string) => {
     const newTime = {
       ...timeRange,
@@ -150,7 +166,7 @@ export function ViewingDetails({ viewing, onClose }: Readonly<IViewingDetailsPro
       return;
     }
     
-    const conflicts = checkForConflicts(newStartTime, newEndTime);
+    const conflicts = filterConflictingSlots(slots, newStartTime, newEndTime);
     
     if (conflicts.length > 0) {
       setConflictingSlots(conflicts);
@@ -166,46 +182,24 @@ export function ViewingDetails({ viewing, onClose }: Readonly<IViewingDetailsPro
   };
 
   const handleSaveChanges = () => {
-    // Convert times for validation
     const newStartTime = `${timeRange.start.hours}:${timeRange.start.minutes}`;
     const newEndTime = `${timeRange.end.hours}:${timeRange.end.minutes}`;
     
-    // Validate time range
-    if (newEndTime <= newStartTime) {
-      // Show error toast/message
-      return;
-    }
+    if (newEndTime <= newStartTime) return;
 
-    const conflicts = slots.filter(slot => {
-      const [slotStart] = slot.time.split(" - ");
-      const [slotHours, slotMinutes] = slotStart.split(":");
-      const slotTimeStr = `${slotHours.padStart(2, '0')}:${slotMinutes}`;
-      
-      return slotTimeStr >= newEndTime || slotTimeStr < newStartTime;
-    });
+    const conflicts = filterConflictingSlots(slots, newStartTime, newEndTime);
 
     if (conflicts.length > 0) {
-      setScheduleConflicts(conflicts.map(slot => ({
+      const conflictData = conflicts.map(slot => ({
         id: slot.id,
         prospect: slot.prospect,
         time: slot.time
-      })));
+      }));
+      setScheduleConflicts(conflictData);
       setShowScheduleDialog(true);
       return;
     }
 
-    // Save all changes
-    const updatedViewing = {
-      ...viewing,
-      time: `${formatTime(timeRange.start)} to ${formatTime(timeRange.end)}`,
-      agent: assignedAgent,
-      slots: slots.map(slot => ({
-        ...slot,
-        time: adjustSlotTime(slot.time, timeRange)
-      }))
-    };
-
-    // Call API to update viewing
     handleConfirmSave();
   };
 
@@ -225,9 +219,8 @@ export function ViewingDetails({ viewing, onClose }: Readonly<IViewingDetailsPro
   };
 
   const handleAddManualViewing = (data: IManualViewingData) => {
-    // Handle adding new viewing
     const newSlot: IViewingSlot = {
-      id: Math.random().toString(),
+      id: generateSecureId(),
       time: data.timeSlot,
       prospect: data.name,
       email: data.email,
@@ -237,10 +230,8 @@ export function ViewingDetails({ viewing, onClose }: Readonly<IViewingDetailsPro
   };
 
   const handleCancelConflictingViewings = () => {
-    // Remove conflicting slots
-    setSlots(prev => prev.filter(slot => 
-      !conflictingSlots.find(conflict => conflict.id === slot.id)
-    ));
+    const updatedSlots = filterNonConflictingSlots(slots, conflictingSlots);
+    setSlots(updatedSlots);
     setShowConflictDialog(false);
   };
 
@@ -264,7 +255,7 @@ export function ViewingDetails({ viewing, onClose }: Readonly<IViewingDetailsPro
           <h2 className="text-[22px] font-medium">
             Viewing Schedules
           </h2>
-          <span className="text-[22px] text-gray-500">: <span className="font-semibold">Wharf Property</span> - Unit 3</span>
+          <span className="text-[22px] text-gray-500">: <span className="font-bold text-black">Wharf Property - Unit 3</span></span>
         </div>
         <div className="flex items-center gap-3">
           {isEditing ? (
@@ -368,7 +359,10 @@ export function ViewingDetails({ viewing, onClose }: Readonly<IViewingDetailsPro
       <div className="flex items-center justify-between mb-6">
         <div className="bg-gray-50/80 p-0.5 rounded-md">
           <div className="flex items-center gap-2.5 bg-white px-4 py-2 rounded border border-gray-100/80">
-            <div className="w-0.5 h-8 bg-blue-500/90 rounded-full" />
+            <div className="flex gap-1">
+              <div className="w-[3px] h-8 bg-blue-500/90 rounded-full" />
+              <div className="w-[3px] h-8 bg-blue-500/90 rounded-full" />
+            </div>
             <span className="text-gray-600 text-sm">
               Available slots: <span className="font-medium text-gray-900">2</span>
             </span>
@@ -398,10 +392,10 @@ export function ViewingDetails({ viewing, onClose }: Readonly<IViewingDetailsPro
           <TableBody>
             {slots.map((slot, index) => (
               <TableRow key={slot.id} className="hover:bg-gray-50/50">
-                <TableCell className="text-gray-500">{index + 1}</TableCell>
-                <TableCell>{slot.time}</TableCell>
-                <TableCell>{slot.prospect}</TableCell>
-                <TableCell>{slot.email}</TableCell>
+                <TableCell className="text-gray-900 font-medium">{index + 1}</TableCell>
+                <TableCell className="text-gray-900 font-medium">{slot.time}</TableCell>
+                <TableCell className="text-gray-900 font-medium">{slot.prospect}</TableCell>
+                <TableCell className="text-gray-900 font-medium">{slot.email}</TableCell>
                 <TableCell>
                   <Badge 
                     variant={slot.status === "confirmed" ? "success" : "default"}
